@@ -1,0 +1,37 @@
+### Image to Model Area ###
+
+    # Model Bools
+        Model_ID = 1                                                 # 1 - Acoustic; 2 - Elastic (int)
+        Model_Extra Routine = False                                  # True - Does extra work to convert wrong pixels, recomended for images not made in MS Paint. (bool)
+        Export_Model_to_Binary_File = False                          # True - Converts model into a binary file. (bool)
+        Plot_Model = True                                            # True - Plot Model (bool)
+
+    # Load Image Model
+        Image_File_Path = /home/davi/CreatePropertyModels/model_images/salt_model.png   # Image File. (str)
+
+    # Model Parameters
+        VP_Velocity = [2000, 4500]                              # Set VP velocity for each layer. (list)
+        VS_Velocity = [1176, 2647]                              # Set VS velocity for each layer. (list)
+        Rho_Value   = [2300, 2600]                              # Set Rho values for each layer.  (list)
+
+    # VS Velocity Approximation
+        VS_Velocity = True                                      # Approximate VS as VP / 1.7. This option disregards the VS array above. (bool)
+
+    # Output Binary File
+        Output_Binary_Path = /home/davi/CreatePropertyModels/binary_models/ # Binary File Output. (str)
+
+### Parallel Plane Model Area ###
+
+    # Model Bools
+        Parallel_Plane_Model_ID = False                         # Creates a Parallel Plane Model instead of an image -> model. This option disregards the options above. (bool)
+        Model_ID = 2                                            # 1 - Acoustic; 2 - Elastic (int)
+        Plot_Model = True                                       # True - Plot Model (bool)
+
+    # Model Parameters
+        Nx = 4001                                               # Sample number in X direction (int) 
+        Nz = 501                                                # Sample number in Z direction (int)
+
+        Interfaces  = [250]                                     # Set where - in meters - layer interfaces will be located. (list)
+        VP_Velocity = [2000, 4500]                              # Set VP velocity for each layer. (list)
+        VS_Velocity = [1176, 2647]                              # Set VS velocity for each layer. (list)
+        Rho_Value   = [2300, 2100]                              # Set Rho values for each layer.  (list)
