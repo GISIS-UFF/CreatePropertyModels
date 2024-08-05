@@ -191,7 +191,7 @@ class AcousticModelPlot:
         zloc = np.linspace(0, Nz - 1, 7, dtype=int)
         zlab = np.array(zloc, dtype=int)
 
-        im = ax.imshow(model, cmap="grey")
+        im = ax.imshow(model, cmap="Greys")
         ax.set_title("VP Model", fontsize=15)
         ax.set_xlabel("Distance [m]",fontsize=12)
         ax.set_ylabel("Depth [m]", fontsize=12)
@@ -220,21 +220,21 @@ class ElasticModelPlot:
         zloc = np.linspace(0, Nz - 1, 7, dtype=int)
         zlab = np.array(zloc, dtype=int)
 
-        im = ax[0].imshow(model_vp, cmap="grey")
+        im = ax[0].imshow(model_vp, cmap="Greys")
         ax[0].set_title("VP Model", fontsize=15)
         #ax[0].set_xlabel("Distance [m]",fontsize=12)
         ax[0].set_ylabel("Depth [m]", fontsize=12)
         cax = fig.colorbar(im, ax=ax[0], label='VP [m/s]')
         cax.set_ticks(np.linspace(model_vp.min(), model_vp.max(), num=5))
 
-        im2 = ax[1].imshow(model_vs, cmap="grey")
+        im2 = ax[1].imshow(model_vs, cmap="Greys")
         ax[1].set_title("VS Model", fontsize=15)
         #ax[1].set_xlabel("Distance [m]",fontsize=12)
         ax[1].set_ylabel("Depth [m]", fontsize=12)
         cax2 = fig.colorbar(im2, ax=ax[1], label='VS [m/s]')
         cax2.set_ticks(np.linspace(model_vs.min(), model_vs.max(), num=5))
 
-        im3 = ax[2].imshow(model_rho, cmap="grey")
+        im3 = ax[2].imshow(model_rho, cmap="Greys")
         ax[2].set_title("Density Model", fontsize=15)
         ax[2].set_xlabel("Distance [m]",fontsize=12)
         ax[2].set_ylabel("Depth [m]", fontsize=12)
