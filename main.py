@@ -23,7 +23,7 @@ def print_parameters(parameters: str) -> None:
 
     print("->Model Parameters")
     print(f"        VP_Velocity = {parameters[5]}")
-    print(f"        VS_Velocity = {parameters[6]}")
+    print(f"        VS_Velocity = {[round(i / 1.7, 2) for i in parameters[6]] if parameters[8] else parameters[6]}")
     print(f"        Rho_Value = {parameters[7]}\n")
 
     print("->VS Velocity Approximation")

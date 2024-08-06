@@ -7,12 +7,12 @@
         Plot_Model = True                                            # True - Plot Model (bool)
 
     # Load Image Model
-        Image_File_Path = /home/davi/CreatePropertyModels/model_images/salt_model.png   # Image File. (str)
+        Image_File_Path = /home/davi/CreatePropertyModels/model_images/fault_model_2.png   # Image File. (str)
 
     # Model Parameters
-        VP_Velocity = [2000, 4500]                              # Set VP velocity for each layer. (list)
+        VP_Velocity = [2000, 3000, 3500]                              # Set VP velocity for each layer. (list)
         VS_Velocity = [1176, 2647]                              # Set VS velocity for each layer. (list)
-        Rho_Value   = [2300, 2600]                              # Set Rho values for each layer.  (list)
+        Rho_Value   = [2300, 2600, 2500]                              # Set Rho values for each layer.  (list)
 
     # VS Velocity Approximation
         VS_Velocity = True                                      # Approximate VS as VP / 1.7. This option disregards the VS array above. (bool)
