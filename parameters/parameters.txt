@@ -11,7 +11,7 @@
 
     # Model Parameters
         VP_Velocity = [2000, 3000, 3500]                              # Set VP velocity for each layer. (list)
-        VS_Velocity = [1176, 2647]                              # Set VS velocity for each layer. (list)
+        VS_Velocity = [1176, 1764, 2058]                              # Set VS velocity for each layer. (list)
         Rho_Value   = [2300, 2600, 2500]                              # Set Rho values for each layer.  (list)
 
     # VS Velocity Approximation
