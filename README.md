@@ -56,7 +56,7 @@ Model parameters need to be the same size as the layers in your model. Example: 
 
 ```
 VP_Velocity = [x, y, z]
-VS_Velocity = [x, y, z] (*)
+VS_Velocity = [x, y, z]
 Rho_Value   = [x, y, z]
 ```
 
