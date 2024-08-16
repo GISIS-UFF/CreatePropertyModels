@@ -3,22 +3,27 @@
     # Model Bools
         Model_ID = 1                                                 # 1 - Acoustic; 2 - Elastic (int)
         Model_Extra Routine = False                                  # True - Does extra work to convert wrong pixels, recomended for images not made in MS Paint. (bool)
-        Export_Model_to_Binary_File = False                          # True - Converts model into a binary file. (bool)
+        Export_Model_to_Binary_File = True                          # True - Converts model into a binary file. (bool)
         Plot_Model = True                                            # True - Plot Model (bool)
 
     # Load Image Model
-        Image_File_Path = /home/davi/CreatePropertyModels/model_images/fault_model_2.png   # Image File. (str)
+        Image_File_Path = model_images/fault_model.png            # Image File. (str)
 
     # Model Parameters
         VP_Velocity = [2000, 3000, 3500]                              # Set VP velocity for each layer. (list)
-        VS_Velocity = [1176, 2647]                              # Set VS velocity for each layer. (list)
+        VS_Velocity = [1176, 1764, 2058]                              # Set VS velocity for each layer. (list)
         Rho_Value   = [2300, 2600, 2500]                              # Set Rho values for each layer.  (list)
 
     # VS Velocity Approximation
-        VS_Velocity = True                                      # Approximate VS as VP / 1.7. This option disregards the VS array above. (bool)
+        VS_Velocity = True                                          # Approximate VS as VP / 1.7. This option disregards the VS array above. (bool)
 
-    # Output Binary File
-        Output_Binary_Path = /home/davi/CreatePropertyModels/binary_models/ # Binary File Output. (str)
+    ## Complex Model ##
+
+        Complex_Model_ID = False                                    # Defines max/min velocity for models with large ammount of layers (bool)
+        Inverse_Velocity = True                                     # True - inverse velocities in case the brightness value in the image are also inversed (bool)
+
+        Minimum_Velocity = 300                                      # Minimum velocity that will appeir in your model (int)                                
+        Maximum_Velocity = 5000                                     # Maximum velocity that will appeir in your model (int) 
 
 ### Parallel Plane Model Area ###
 

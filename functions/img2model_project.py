@@ -100,6 +100,27 @@ class CreateModel(ImageDimensions):
         return np.argmin([abs(element - brightness.astype(np.int16)) for element in frequent_brightness])
 
 
+class CreateComplexModel(ImageDimensions):
+    def __init__(self, image: np.array, vmin: int, vmax: int, inverse_velocity: bool) -> None:
+        super().__init__(image)
+        self.vmin = vmin
+        self.vmax = vmax
+        self.inverse_velocity = inverse_velocity
+        self.model = np.zeros((self.height, self.width))
+
+    def set_model_values(self):
+        v_ratio = (self.vmax - self.vmin) / 255
+        for i in range(self.height):
+            for j in range(self.width):
+                brightness = self.image[i][j]
+                self.model[i][j] = self.__get_velocity_order(brightness, v_ratio)
+        return self.model
+
+    def __get_velocity_order(self, brightness, v_ratio):
+        arg = (brightness - 1) * v_ratio
+        return self.vmax - arg if self.inverse_velocity else self.vmin + arg 
+    
+
 class ModelRoutine(CreateModel):
     """
     Extra routine for images not made in MS Paint
