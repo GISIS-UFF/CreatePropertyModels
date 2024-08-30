@@ -20,44 +20,44 @@
 
     # Model Bools
         Image_To_Model_ID = False                                   # True - Coverts image brightness into properties values (bool) 
-        Model_Extra Routine = False                                  # True - Does extra work to convert wrong pixels, recomended for images not made in MS Paint. (bool)
+        Model_Extra Routine = False                                 # True - Does extra work to convert wrong pixels, recomended for images not made in MS Paint. (bool)
 
     # Load Image Model
-        Image_File_Path = model_images/marmousi_model.jpg            # Path of the image File. (str)
+        Image_File_Path = model_images/marmousi_model.jpg           # Path of the image File. (str)
 
     # Model Parameters
-        VP_Velocity = [2000, 3000, 3500]                              # Set VP - m/s - velocity for each layer. (list)
-        VS_Velocity = [1176, 1764, 2058]                              # Set VS - m/s - velocity for each layer. (list)
-        Rho_Value   = [2300, 2600, 2500]                              # Set Rho - Kg/m^3 - in values for each layer. (list)
+        VP_Velocity     = [2000, 3000, 3500]                        # Set VP - m/s - velocity for each layer. (list)
+        VS_Velocity     = [1176, 1764, 2058]                        # Set VS - m/s - velocity for each layer. (list)
+        Density_Value   = [2300, 2600, 2500]                        # Set Density - Kg/m^3 - in values for each layer. (list)
 
 ### Complex Image Model ###
 
     # Model Bools
 
-        Complex_Model_ID = True                                        # Defines max/min velocity for models with large ammount of layers (bool)
-        Inverse_Velocity = False                                        # True - inverse velocities in case the brightness value in the image are also inversed (bool)
+        Complex_Model_ID = True                                     # Defines max/min velocity for models with large ammount of layers (bool)
+        Inverse_Velocity = False                                    # True - inverse velocities in case the brightness value in the image are also inversed (bool)
 
     # Model Parameters
 
-        Minimum_VP_Velocity = 1500                                      # Minimum VP velocity that will appeir in your model (float)                                
-        Maximum_VP_Velocity = 5000                                      # Maximum VP velocity that will appeir in your model (float)
+        Minimum_VP_Velocity = 1500                                  # Minimum VP velocity that will appeir in your model (float)                                
+        Maximum_VP_Velocity = 5000                                  # Maximum VP velocity that will appeir in your model (float)
 
-        Minimum_VS_Velocity = 882                                      # Minimum VS velocity that will appeir in your model (float) 
-        Maximum_VS_Velocity = 2941                                     # Maximum VS velocity that will appeir in your model (float)
+        Minimum_VS_Velocity = 882                                   # Minimum VS velocity that will appeir in your model (float) 
+        Maximum_VS_Velocity = 2941                                  # Maximum VS velocity that will appeir in your model (float)
 
-        Minimum_Density = 2000                                         # Minimum Density that will appeir in your model (float)
-        Maximum_Density = 3500                                         # Maximum Density that will appeir in your model (float) 
+        Minimum_Density = 2000                                      # Minimum Density that will appeir in your model (float)
+        Maximum_Density = 3500                                      # Maximum Density that will appeir in your model (float) 
 
 ### Parallel Plane Model Area ###
 
     # Model Bools
-        Parallel_Plane_Model_ID = False                         # Creates a Parallel Plane Model instead of an image -> model. This option disregards the options above. (bool)
+        Parallel_Plane_Model_ID = False                             # Creates a Parallel Plane Model instead of an image -> model. This option disregards the options above. (bool)
 
     # Model Parameters
-        Nx = 4001                                               # Sample number in X direction (int) 
-        Nz = 501                                                # Sample number in Z direction (int)
+        Nx = 4001                                                   # Sample number in X direction (int) 
+        Nz = 501                                                    # Sample number in Z direction (int)
 
-        Interfaces  = [250]                                     # Set where - in meters - layer interfaces will be located. (list)
-        VP_Velocity = [2000, 4500]                              # Set VP velocity for each layer. (list)
-        VS_Velocity = [1176, 2647]                              # Set VS velocity for each layer. (list)
-        Rho_Value   = [2300, 2100]                              # Set Rho values for each layer.  (list)
+        Interfaces      = [250]                                     # Set where - in meters - layer interfaces will be located. (list)
+        VP_Velocity     = [2000, 4500]                              # Set VP velocity for each layer. (list)
+        VS_Velocity     = [1176, 2647]                              # Set VS velocity for each layer. (list)
+        Density_Value   = [2300, 2100]                              # Set Density values for each layer.  (list)
