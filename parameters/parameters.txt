@@ -1,20 +1,20 @@
 ### General Parameters ###
 
     # Model Parameters
-        Model_ID = 2                                                  # 1 - Acoustic; 2 - Elastic (int)
-        Export_Model_to_Binary_File = False                           # True - Converts model into a binary file. (bool)
-        Plot_Model = True                                             # True - Plot Model (bool)
-        Model_Smoothing = False                                        # True - Uses a 2D Gaussian Kernel to smooth the model. (bool)
-        Smooth_Level = 6                                              # Defines the level of smoothness of the Gaussian Kernel. (int)
+        Model_ID = 2                                                # 1 - Acoustic; 2 - Elastic (int)
+        Export_Model_to_Binary_File = False                         # True - Converts model into a binary file. (bool)
+        Plot_Model = True                                           # True - Plot Model (bool)
+        Model_Smoothing = False                                     # True - Uses a 2D Gaussian Kernel to smooth the model. (bool)
+        Smooth_Level = 6                                            # Defines the level of smoothness of the Gaussian Kernel. (int)
 
     # Export Model Path
-        Binary_Model_Path = binary_models/                            # Path for the output of binary model (str) 
+        Binary_Model_Path = binary_models/                          # Path for the output of binary model (str) 
 
     # VS Velocity Approximation
-        VS_Velocity = True                                            # Approximate VS as VP / 1.7. This option disregards the VS array below. (bool)
+        VS_Velocity = True                                          # Approximate VS as VP / 1.7. This option disregards the VS array below. (bool)
 
     # Density Value Approximation
-        Density_Value = True                                          # Uses Gardner Approximation for Density: 0.23 * Vp ** 0.25. This option disregards the Density array below. (bool) 
+        Density_Value = True                                        # Uses Gardner Approximation for Density: 0.23 * Vp ** 0.25. This option disregards the Density array below. (bool) 
 
 ### Image to Model Area ###
 
