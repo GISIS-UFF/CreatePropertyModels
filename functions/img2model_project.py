@@ -1,6 +1,6 @@
-import cv2
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
 
 class ErrorHandling:
     """
@@ -12,30 +12,45 @@ class ErrorHandling:
         exit()
 
     @staticmethod
+    def wrong_image_format() -> None:
+        print("Please use a valid image format. [png, jpg, jpeg]")
+        exit()
+
+    @staticmethod
     def could_not_open_file() -> None:
         print("Can't open/read file. Make sure your file path is right.")
         exit()
 
-
 class ImageDimensions:
     def __init__(self, image: np.array) -> None:
         self.image = image
-        self.height, self.width = self.__get_image_dimensions()
-
-    def __get_image_dimensions(self):
-        return self.image.shape
-
+        self.height, self.width = self.image.shape
 
 class ImageLoader:
     def __init__(self, path: str) -> None:
         self.path = path
+        self.format_values = {'.png': 255, '.jpg': 1, '.jpeg': 1}
 
     def load_image(self) -> np.array:
         try: 
-            return cv2.cvtColor(cv2.imread(self.path), cv2.COLOR_BGR2GRAY)
+            return (self.rgb2gray(mpimg.imread(self.path)) * self.image_format_multiplier(self.path)).astype(np.uint16)
         except:
             ErrorHandling.verify_image_existence()
-        
+
+    def rgb2gray(self, rgb):
+        r, g, b = rgb[:,:,0], rgb[:,:,1], rgb[:,:,2]
+        gray = 0.2989 * r + 0.5870 * g + 0.1140 * b
+
+        return gray   
+    
+    def image_format_multiplier(self, path: str):
+        image_format_index = path.find('.')
+        image_format = path[image_format_index:]
+        try:
+            return self.format_values[image_format]
+        except:
+            ErrorHandling.wrong_image_format()
+
 
 class FindPredominantBrightness(ImageDimensions):
     """
@@ -43,24 +58,17 @@ class FindPredominantBrightness(ImageDimensions):
     """
     def __init__(self, image: np.array):
         super().__init__(image)
-        self.unique_brightness_values = self.__get_flatten_image()
+        self.unique_brightness_values = self.image.flatten()
 
-    def get_image_predominant_brightness(self):
+    def get_image_predominant_brightness(self, tolerance=1000):
         self.count = self.__get_predominant_color_loop()
-        return self.__get_predominant_brightness_array()
-    
-    def __get_flatten_image(self):
-        return self.image.flatten()
+        return [int(brightness_value) for brightness_value, occurrence in self.count.items() if occurrence > tolerance]
 
     def __get_predominant_color_loop(self):
         count = {}
         for brightness_value in self.unique_brightness_values:
             count[brightness_value] = count.get(brightness_value, 0) + 1
         return count        
-
-    def __get_predominant_brightness_array(self, tolerance=1000):
-        return [int(brightness_value) for brightness_value, occurrence in self.count.items() if occurrence > tolerance]
-
 
 class CreateModel(ImageDimensions):
     """
@@ -97,30 +105,30 @@ class CreateModel(ImageDimensions):
         opencv automatically puts brightness values as int8, in this function I had to change it to int16
         to be sure it gets the right value
         """
-        return np.argmin([abs(element - brightness.astype(np.int16)) for element in frequent_brightness])
-
+        return np.argmin([abs(element - brightness.astype(np.uint16)) for element in frequent_brightness])
 
 class CreateComplexModel(ImageDimensions):
-    def __init__(self, image: np.array, vmin: int, vmax: int, inverse_velocity: bool) -> None:
+    def __init__(self, image: np.array, pmin: float, pmax: float, inverse_velocity: bool) -> None:
         super().__init__(image)
-        self.vmin = vmin
-        self.vmax = vmax
+        self.pmin = pmin
+        self.pmax = pmax
         self.inverse_velocity = inverse_velocity
         self.model = np.zeros((self.height, self.width))
 
     def set_model_values(self):
-        v_ratio = (self.vmax - self.vmin) / 255
+        min_brightness = np.min(self.image)
+        max_brightness = np.max(self.image)
+        v_ratio = (self.pmax - self.pmin) / (max_brightness - min_brightness)
         for i in range(self.height):
             for j in range(self.width):
                 brightness = self.image[i][j]
-                self.model[i][j] = self.__get_velocity_order(brightness, v_ratio)
+                self.model[i][j] = self.__get_velocity_order(brightness, v_ratio, min_brightness)
         return self.model
 
-    def __get_velocity_order(self, brightness, v_ratio):
-        arg = (brightness - 1) * v_ratio
-        return self.vmax - arg if self.inverse_velocity else self.vmin + arg 
+    def __get_velocity_order(self, brightness, v_ratio, min_brightness):
+        arg = (brightness - min_brightness) * v_ratio
+        return self.pmax - arg if self.inverse_velocity else self.pmin + arg 
     
-
 class ModelRoutine(CreateModel):
     """
     Extra routine for images not made in MS Paint
@@ -155,13 +163,12 @@ class ModelRoutine(CreateModel):
         arr_brightness_condition = unique_values[counts > 5]
         return arr_brightness_condition if len(arr_brightness_condition) > 0 else []
 
-
 class GetParameters:
     """
     Get parameters from parameters.txt
     """
     def __init__(self, file_path):
-        self.type_converter = {'int': int, 'bool': self.__check_if_parameter_is_bool, 'str': str}
+        self.type_converter = {'int': int, 'bool': self.__check_if_parameter_is_bool, 'str': str, 'float': float}
         self.file_path = file_path
 
     def get_parameter(self):
@@ -199,20 +206,19 @@ class GetParameters:
             self.parameter = self.type_converter[self.parameter_type](self.parameter)
             self.parameters_array.append(self.parameter)        
 
-
 class AcousticModelPlot:
 
     @staticmethod
     def acoustic_plot(model: list, Nx: int, Nz: int):
-        fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(18,10))
+        fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(10,8))
 
-        xloc = np.linspace(0, Nx - 1, 11, dtype=int)
+        xloc = np.linspace(0, Nx - 1, 7, dtype=int)
         xlab = np.array(xloc, dtype=int)
 
         zloc = np.linspace(0, Nz - 1, 7, dtype=int)
         zlab = np.array(zloc, dtype=int)
 
-        im = ax.imshow(model, cmap="Greys")
+        im = ax.imshow(model, cmap="jet", aspect="auto")
         ax.set_title("VP Model", fontsize=15)
         ax.set_xlabel("Distance [m]",fontsize=12)
         ax.set_ylabel("Depth [m]", fontsize=12)
@@ -225,38 +231,38 @@ class AcousticModelPlot:
         ax.set_yticks(zloc)
         ax.set_yticklabels(zlab)
 
+        plt.tight_layout()
         plt.show()
         return fig
-
 
 class ElasticModelPlot:
     
     @staticmethod
     def elastic_model_plot(model_vp: list, model_vs: list, model_rho: list, Nx: int, Nz: int):
-        fig, ax = plt.subplots(nrows=3, ncols=1, figsize=(18,10))
+        fig, ax = plt.subplots(nrows=3, ncols=1, figsize=(10,8))
 
-        xloc = np.linspace(0, Nx - 1, 11, dtype=int)
+        xloc = np.linspace(0, Nx - 1, 7, dtype=int)
         xlab = np.array(xloc, dtype=int)
 
         zloc = np.linspace(0, Nz - 1, 7, dtype=int)
         zlab = np.array(zloc, dtype=int)
 
-        im = ax[0].imshow(model_vp, cmap="Greys")
-        ax[0].set_title("VP Model", fontsize=15)
+        im = ax[0].imshow(model_vp, cmap="jet", aspect="auto")
+        ax[0].set_title("VP Model", fontsize=13)
         #ax[0].set_xlabel("Distance [m]",fontsize=12)
         ax[0].set_ylabel("Depth [m]", fontsize=12)
         cax = fig.colorbar(im, ax=ax[0], label='VP [m/s]')
         cax.set_ticks(np.linspace(model_vp.min(), model_vp.max(), num=5))
 
-        im2 = ax[1].imshow(model_vs, cmap="Greys")
-        ax[1].set_title("VS Model", fontsize=15)
+        im2 = ax[1].imshow(model_vs, cmap="jet", aspect="auto")
+        ax[1].set_title("VS Model", fontsize=13)
         #ax[1].set_xlabel("Distance [m]",fontsize=12)
         ax[1].set_ylabel("Depth [m]", fontsize=12)
         cax2 = fig.colorbar(im2, ax=ax[1], label='VS [m/s]')
         cax2.set_ticks(np.linspace(model_vs.min(), model_vs.max(), num=5))
 
-        im3 = ax[2].imshow(model_rho, cmap="Greys")
-        ax[2].set_title("Density Model", fontsize=15)
+        im3 = ax[2].imshow(model_rho, cmap="jet", aspect="auto")
+        ax[2].set_title("Density Model", fontsize=13)
         ax[2].set_xlabel("Distance [m]",fontsize=12)
         ax[2].set_ylabel("Depth [m]", fontsize=12)
         cax3 = fig.colorbar(im3, ax=ax[2], label='Density [kg/m$^3$]')
@@ -269,9 +275,9 @@ class ElasticModelPlot:
             ax[i].set_yticks(zloc)
             ax[i].set_yticklabels(zlab)
 
+        plt.tight_layout()
         plt.show()
         return fig
-
 
 class Export2Binary:
     """
@@ -283,7 +289,6 @@ class Export2Binary:
 
     def export_model_to_binary(self) -> None:
         self.model.flatten('F').astype('float32', order='F').tofile(self.path)
-
 
 class ModelCreator:
     @staticmethod
