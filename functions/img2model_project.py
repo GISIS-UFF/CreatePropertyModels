@@ -1,6 +1,9 @@
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
+
+# matplotlib.use('TkAgg')
 
 class ErrorHandling:
     """
@@ -30,7 +33,6 @@ class ImageLoader:
     def __init__(self, path: str) -> None:
         self.path = path
         self.format_values = {'.png': 255, '.jpg': 1, '.jpeg': 1}
-
     def load_image(self) -> np.array:
         try: 
             return (self.rgb2gray(mpimg.imread(self.path)) * self.image_format_multiplier(self.path)).astype(np.uint16)
@@ -88,17 +90,14 @@ class CreateModel(ImageDimensions):
                 brightness = self.image[i][j]
                 self.model[i][j] = self.respective_value[brightness]
 
-        self.__change_wrong_brightness_value_loop()
+            self.__change_wrong_brightness_value_loop(brightness, i, j)
         if self.routine_bool: ModelRoutine(self.model).model_routine_loop()
         return self.model
 
-    def __change_wrong_brightness_value_loop(self):
-        for i in range(self.height):
-            for j in range(self.width):
-                brightness = self.image[i][j]
-                if brightness not in self.respective_value:
-                    nearest_index = self.__closest_brightness_value(brightness, self.frequent_brightness)
-                    self.model[i][j] = self.respective_value[list(self.respective_value.keys())[nearest_index]]
+    def __change_wrong_brightness_value_loop(self, brightness, i, j):
+        if brightness not in self.respective_value:
+            nearest_index = self.__closest_brightness_value(brightness, self.frequent_brightness)
+            self.model[i][j] = self.respective_value[list(self.respective_value.keys())[nearest_index]]
 
     def __closest_brightness_value(self, brightness: int, frequent_brightness: list) -> int:
         """
