@@ -1,7 +1,9 @@
+from src import np, plt
+
 class ElasticModelPlot:
     
     @staticmethod
-    def elastic_model_plot(model_vp: list, model_vs: list, model_rho: list, Nx: int, Nz: int):
+    def plot(model_vp: list, model_vs: list, model_rho: list, Nx: int, Nz: int):
         fig, ax = plt.subplots(nrows=3, ncols=1, figsize=(10,8))
 
         xloc = np.linspace(0, Nx - 1, 7, dtype=int)

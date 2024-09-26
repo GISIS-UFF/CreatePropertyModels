@@ -1,7 +1,9 @@
+from src import np, plt
+
 class AcousticModelPlot:
 
     @staticmethod
-    def acoustic_plot(model: list, Nx: int, Nz: int):
+    def plot(model: list, Nx: int, Nz: int):
         fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(10,8))
 
         xloc = np.linspace(0, Nx - 1, 7, dtype=int)

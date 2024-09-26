@@ -1,3 +1,5 @@
+from src import np
+
 class ImageDimensions:
     def __init__(self, image: np.array) -> None:
         self.image = image
@@ -7,7 +9,7 @@ class ImageLoader:
     def __init__(self, path: str) -> None:
         self.path = path
         self.format_values = {'.png': 255, '.jpg': 1, '.jpeg': 1}
-    def load_image(self) -> np.array:
+    def load(self) -> np.array:
         try: 
             return (self.rgb2gray(mpimg.imread(self.path)) * self.image_format_multiplier(self.path)).astype(np.uint16)
         except:

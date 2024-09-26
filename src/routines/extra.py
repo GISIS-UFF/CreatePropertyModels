@@ -6,7 +6,7 @@ class ModelRoutine(CreateModel):
         self.model = model
         self.height, self.width = self.model.shape
 
-    def model_routine_loop(self):
+    def loop(self):
         for i in range(self.height):
             for j in range(self.width):
                 adj_values = self.__get_adjacent(self.model, i, j)
