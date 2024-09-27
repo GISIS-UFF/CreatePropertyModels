@@ -1,4 +1,6 @@
-class ModelRoutine(CreateModel):
+from src import np
+
+class ModelRoutine:
     """
     Extra routine for images not made in MS Paint
     """
@@ -16,7 +18,6 @@ class ModelRoutine(CreateModel):
         return self.model
 
     def __get_adjacent(self, arr: list, i: int, j: int) -> list:
-        # I may or may not had a little help on this one :running:
         rows = len(arr)
         cols = len(arr[0])
 
@@ -31,4 +32,3 @@ class ModelRoutine(CreateModel):
         unique_values, counts = np.unique(adj_arr, return_counts=True)
         arr_brightness_condition = unique_values[counts > 5]
         return arr_brightness_condition if len(arr_brightness_condition) > 0 else []
-

@@ -1,10 +1,11 @@
-class FindPredominantBrightness(ImageDimensions):
+
+class FindPredominantBrightness():
     """
     Get frequent brightness values of the image
     """
-    def __init__(self, image: np.array):
-        super().__init__(image)
-        self.unique_brightness_values = self.image.flatten()
+    def __init__(self, img):
+        self.img = img
+        self.unique_brightness_values = img.flatten()
 
     def get(self, tolerance=1000):
         self.count = self.__get_color_loop()

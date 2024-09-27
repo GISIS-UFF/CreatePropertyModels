@@ -1,8 +1,5 @@
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
-
-from src import data as d
+from src import GetParameters, Parameters
+from src import ImageLoader
 
 # class ModelCreator:
 #     @staticmethod
@@ -11,7 +8,24 @@ from src import data as d
 #         return model_creator.set_model_values()
 
 def run():
-    pass
+    
+    PATH = "config/parameters.txt"
+    p = GetParameters(PATH)
+
+    data_raw = p.get()
+
+    d = Parameters(data_raw)
+
+    test = d.image_file_path
+
+    i = ImageLoader("data/input/salt_model.png")
+
+    img = i.load()
+
+    height, width = i.get_dimension()
+
+    print(d.model_id)
+    print(height, width)
 
 if __name__ == '__main__':
     run()

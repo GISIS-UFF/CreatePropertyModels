@@ -1,3 +1,5 @@
+from src import np, ErrorHandling
+
 class AcousticModel:
     """
     Creates VP model

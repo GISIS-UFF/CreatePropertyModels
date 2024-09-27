@@ -1,4 +1,4 @@
-class Parameters:
+class GetParameters:
     """
     Get parameters from parameters.txt
     """

@@ -1,4 +1,3 @@
-from src import np, ImageDimensions, ModelRoutine
 
 class CreateModel(ImageDimensions):
     """
@@ -17,9 +16,11 @@ class CreateModel(ImageDimensions):
             for j in range(self.width):
                 brightness = self.image[i][j]
                 self.model[i][j] = self.respective_value[brightness]
-
-            self.__change_wrong_brightness_value_loop(brightness, i, j)
-        if self.routine_bool: ModelRoutine(self.model).model_routine_loop()
+                self.__change_wrong_brightness_value_loop(brightness, i, j)
+                
+        if self.routine_bool: 
+            routine = ModelRoutine(self.model) 
+            routine.loop()
         return self.model
 
     def __change_wrong_brightness_value_loop(self, brightness, i, j):

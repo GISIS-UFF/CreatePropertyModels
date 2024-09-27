@@ -1,3 +1,5 @@
+from src import np, ErrorHandling
+
 class ElasticModel:
     """
     Creates VP, VS and Density model

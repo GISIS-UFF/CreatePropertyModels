@@ -8,7 +8,7 @@
         Smooth_Level = 6                                            # Defines the level of smoothness of the Gaussian Kernel. (int)
 
     # Export Model Path
-        Binary_Model_Path = binary_models/                          # Path for the output of binary model (str) 
+        Binary_Model_Path = data/output/                          # Path for the output of binary model (str) 
 
     # VS Velocity Approximation
         VS_Velocity = True                                          # Approximate VS as VP / 1.7. This option disregards the VS array below. (bool)
@@ -23,7 +23,7 @@
         Model_Extra Routine = False                                 # True - Does extra work to convert wrong pixels, recomended for images not made in MS Paint. (bool)
 
     # Load Image Model
-        Image_File_Path = model_images/marmousi_model.jpg           # Path of the image File. (str)
+        Image_File_Path = data/input/salt_model.png           # Path of the image File. (str)
 
     # Model Parameters
         VP_Velocity     = [2000, 3000, 3500]                        # Set VP - m/s - velocity for each layer. (list)
