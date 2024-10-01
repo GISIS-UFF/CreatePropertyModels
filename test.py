@@ -1,31 +1,32 @@
-from src import GetParameters, Parameters
-from src import ImageLoader
+from src import np, plt, Parameters, Image, FindPredominantBrightness, CreateModel
+import time
 
-# class ModelCreator:
-#     @staticmethod
-#     def create_model(image: np.array, frequent_brightness: list, interfaces: list, routine_bool: bool) -> np.array:
-#         model_creator = CreateModel(image, frequent_brightness, interfaces, routine_bool)
-#         return model_creator.set_model_values()
+__author__ = "Davi Melonio"
 
 def run():
-    
     PATH = "config/parameters.txt"
-    p = GetParameters(PATH)
+    p = Parameters(PATH)
 
-    data_raw = p.get()
+    image_loader = Image(p.image_file_path)
+    img = image_loader.img
 
-    d = Parameters(data_raw)
+    brightness_finder = FindPredominantBrightness(img)
+    frequent_brightness = brightness_finder.get()
 
-    test = d.image_file_path
+    model_creator = CreateModel(image_loader, frequent_brightness, p.vp_interfaces, p.model_extra_routine)
+    model = model_creator.set_values()
 
-    i = ImageLoader("data/input/salt_model.png")
-
-    img = i.load()
-
-    height, width = i.get_dimension()
-
-    print(d.model_id)
-    print(height, width)
+    return model
 
 if __name__ == '__main__':
-    run()
+    start = time.time()
+
+    model = run()
+
+    end = time.time()
+
+    plt.imshow(model)
+    plt.show()
+
+    print(f"Runtime: {end - start} seconds")
+

@@ -18,6 +18,7 @@ class ModelRoutine:
         return self.model
 
     def __get_adjacent(self, arr: list, i: int, j: int) -> list:
+        # I may or may not had a little help on this one
         rows = len(arr)
         cols = len(arr[0])
 
