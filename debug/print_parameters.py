@@ -1,4 +1,4 @@
-def print_parameters(data: Parameters) -> None:
+def print_parameters(data) -> None:
     print("=============== Configuration ===============\n")
     
     print("### General Parameters ###\n")
@@ -52,8 +52,8 @@ def print_parameters(data: Parameters) -> None:
     print(f"        Nx = {data.nx}")
     print(f"        Nz = {data.nz}")
     print(f"        Interfaces = {data.interfaces}")
-    print(f"        VP_Velocity = {data.vp_interfaces}")
-    print(f"        VS_Velocity = {data.vs_interfaces}")
-    print(f"        Rho_Value = {data.rho_interfaces}\n")
+    print(f"        VP_Velocity = {data.vp_velocity_parallel}")
+    print(f"        VS_Velocity = {data.vs_velocity_parallel}")
+    print(f"        Rho_Value = {data.density_value_parallel}\n")
     
     print("============================================\n")

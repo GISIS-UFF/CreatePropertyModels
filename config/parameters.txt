@@ -26,7 +26,7 @@
         Image_File_Path = data/input/salt_model.png           # Path of the image File. (str)
 
     # Model Parameters
-        VP_Velocity     = [2000, 3000, 3500]                        # Set VP - m/s - velocity for each layer. (list)
+        VP_Velocity     = [2000, 3000]                        # Set VP - m/s - velocity for each layer. (list)
         VS_Velocity     = [1176, 1764, 2058]                        # Set VS - m/s - velocity for each layer. (list)
         Density_Value   = [2300, 2600, 2500]                        # Set Density - Kg/m^3 - in values for each layer. (list)
 
@@ -58,6 +58,6 @@
         Nz = 501                                                    # Sample number in Z direction (int)
 
         Interfaces      = [250]                                     # Set where - in meters - layer interfaces will be located. (list)
-        VP_Velocity     = [2000, 4500]                              # Set VP velocity for each layer. (list)
-        VS_Velocity     = [1176, 2647]                              # Set VS velocity for each layer. (list)
-        Density_Value   = [2300, 2100]                              # Set Density values for each layer.  (list)
+        VP_Velocity_Parallel     = [2000, 4500]                              # Set VP velocity for each layer. (list)
+        VS_Velocity_Parallel     = [1176, 2647]                              # Set VS velocity for each layer. (list)
+        Density_Value_Parallel   = [2300, 2100]                              # Set Density values for each layer.  (list)

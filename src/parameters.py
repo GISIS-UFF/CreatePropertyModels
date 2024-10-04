@@ -29,12 +29,13 @@ class Parameters:
         self.image_to_model_id = self.data.get('Image_To_Model_ID')
         self.model_extra_routine = self.data.get('Model_Extra Routine')
         self.image_file_path = self.data.get('Image_File_Path')
-        self.vp_velocity = (
+        self.vp_velocity = self.data.get('VP_Velocity')
+        self.vs_velocity = (
             [round(i / 1.7, 2) for i in self.data.get('VS_Velocity')] 
             if self.data.get('VS_Velocity') else self.data.get('Density_Value')
         )
         self.rho_value = (
-            [round((0.31 * i ** 0.25) * 1e3, 2) for i in self.data.get('VS_Velocity')] 
+            [round((0.31 * i ** 0.25) * 1e3, 2) for i in self.data.get('VP_Velocity')] 
             if self.data.get('Density_Value') else self.data.get('Density_Value')
         )
         self.complex_model_bool = self.data.get('Complex_Model_ID')
@@ -61,30 +62,34 @@ class Parameters:
         self.nx = self.data.get('Nx')
         self.nz = self.data.get('Nz')
         self.interfaces = self.data.get('Interfaces')
-        self.vp_interfaces = self.data.get('VP_Velocity')
-        self.vs_interfaces = self.data.get('VS_Velocity')
-        self.rho_interfaces = self.data.get('Density_Value')
+        self.vp_velocity_parallel = self.data.get('VP_Velocity_Parallel')
+        self.vs_velocity_parallel = (
+            [round(i / 1.7, 2) for i in self.data.get('VS_Velocity')] 
+            if self.data.get('VS_Velocity') else self.data.get('Density_Value')
+
+        )
+        self.density_value_parallel = (
+            [round((0.31 * i ** 0.25) * 1e3, 2) for i in self.data.get('VP_Velocity')] 
+            if self.data.get('Density_Value') else self.data.get('Density_Value')
+        )
 
     def get(self):
-        try:
-            with open(self.file_path, "r") as file:
-                for line in file.readlines():
-                    line = line.strip()
-                    if line and line[0] != "#":
-                        key_value_match = re.search(r"(\w+)\s*=\s*(.+?)(\s*#|\s*$)", line)
+            try:
+                with open(self.file_path, "r") as file:
+                    for line in file.readlines():
+                        key_value_m = re.search(r"(\w+)\s*=\s*(.+?)(\s*#|\s*$)", line)
 
-                        type_match = re.search(r"\((.*?)\)", line)
+                        type_m = re.search(r"\((.*?)\)", line)
                         try:
-                            if key_value_match:
-                                key = key_value_match.group(1)
-                                value = key_value_match.group(2).strip()
+                            if key_value_m and type_m and type_m.group(1) in self.type_converter:
+                                key = key_value_m.group(1)
+                                value = key_value_m.group(2).strip()
 
-                                if type_match and type_match.group(1) in self.type_converter:
-                                    self.data[key] = self.type_converter[type_match.group(1)](value)
+                                self.data[key] = self.type_converter[type_m.group(1)](value)
                         except:
                             raise ValueError("Check the format of the parameters file.") 
-        except:
-            raise IOError("Could not find parameters file.")
+            except:
+                raise IOError("Could not find parameters file.")
 
     def __convert_to_list(self, data):
         return [int(element.strip()) for element in data.strip('[]').split(',') if element]
@@ -94,5 +99,3 @@ class Parameters:
             return True
         elif data.upper() == 'FALSE':
             return False
-            
-
