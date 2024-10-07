@@ -75,7 +75,7 @@ class Parameters:
 
     def get(self):
             try:
-                with open(self.file_path, "r") as file:
+                with open(self.file_path, "r", encoding="utf-8") as file:
                     for line in file.readlines():
                         key_value_m = re.search(r"(\w+)\s*=\s*(.+?)(\s*#|\s*$)", line)
 

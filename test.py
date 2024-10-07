@@ -1,7 +1,8 @@
 from src import np, plt, Parameters, Image, PredominantBrightness, CreateModel, Parallel
 import debug.print_parameters 
 import time
-
+# botar o objeto de Parameters como argumento nas classes
+# run só controla, não fica passando parametro
 __author__ = "Davi Melonio"
 
 def run():
