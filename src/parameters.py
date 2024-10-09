@@ -18,6 +18,8 @@ class Parameters:
 
         self.get()
 
+        self.print_parameters = self.data.get('Print_Parameters')
+        self.algorithm_type = self.data.get('Algorithm')
         self.model_id = self.data.get('Model_ID')
         self.export_model_to_binary_file = self.data.get('Export_Model_to_Binary_File')
         self.plot_model_bool = self.data.get('Plot_Model')
@@ -87,7 +89,7 @@ class Parameters:
 
                                 self.data[key] = self.type_converter[type_m.group(1)](value)
                         except:
-                            raise ValueError("Check the format of the parameters file.") 
+                            raise ValueError(f"Check the syntax of line: \n{line}") 
             except:
                 raise IOError("Could not find parameters file.")
 

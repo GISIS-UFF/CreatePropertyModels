@@ -1,7 +1,10 @@
 ### General Parameters ###
 
+    Print_Parameters = False                                        # Print Parameters used when executing the file. (bool)
+
     # Model Parameters
-        Model_ID = 2                                                # 1 - Acoustic; 2 - Elastic (int)
+        Algorithm = 1                                               # 1 - Image to Model; 2 - Complex Model; 3 - Parallel Model. (int)
+        Model_ID = 1                                                # 1 - Acoustic; 2 - Elastic (int)
         Export_Model_to_Binary_File = False                         # True - Converts model into a binary file. (bool)
         Plot_Model = True                                           # True - Plot Model (bool)
         Model_Smoothing = False                                     # True - Uses a 2D Gaussian Kernel to smooth the model. (bool)
@@ -19,7 +22,6 @@
 ### Image to Model Area ###
 
     # Model Bools
-        Image_To_Model_ID = False                                   # True - Coverts image brightness into properties values (bool) 
         Model_Extra Routine = False                                 # True - Does extra work to convert wrong pixels, recomended for images not made in MS Paint. (bool)
 
     # Load Image Model
@@ -33,8 +35,6 @@
 ### Complex Image Model ###
 
     # Model Bools
-
-        Complex_Model_ID = True                                     # Defines max/min velocity for models with large ammount of layers (bool)
         Inverse_Velocity = False                                    # True - inverse velocities in case the brightness value in the image are also inversed (bool)
 
     # Model Parameters
@@ -49,9 +49,6 @@
         Maximum_Density = 3500                                      # Maximum Density that will appeir in your model (float) 
 
 ### Parallel Plane Model Area ###
-
-    # Model Bools
-        Parallel_Plane_Model_ID = False                             # Creates a Parallel Plane Model instead of an image -> model. This option disregards the options above. (bool)
 
     # Model Parameters
         Nx = 4001                                                   # Sample number in X direction (int) 
