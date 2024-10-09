@@ -18,6 +18,7 @@ class Image():
 
         elif p.algorithm_type == 2:
             self.height, self.width = self.img.shape[:2]
+            self.inverse_velocity = p.inverse_velocity
 
         elif p.algorithm_type == 3:
             self.properties = p.vp_velocity_parallel
@@ -34,6 +35,7 @@ class Image():
             if p.algorithm_type == 1:
                 self.set_values()
             elif p.algorithm_type == 2:
+                self.pmin, self.pmax = p.vpmin, p.vpmax
                 self.set_values_complex()
 
         elif p.model_id == 2:

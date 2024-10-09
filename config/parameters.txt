@@ -47,7 +47,6 @@
 
         Minimum_Density = 2000                                      # Minimum Density that will appeir in your model (float)
         Maximum_Density = 3500                                      # Maximum Density that will appeir in your model (float) 
-
 ### Parallel Plane Model Area ###
 
     # Model Parameters

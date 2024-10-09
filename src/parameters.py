@@ -101,3 +101,64 @@ class Parameters:
             return True
         elif data.upper() == 'FALSE':
             return False
+
+    def print_parameters(self) -> None:
+        print("=============== Configuration ===============\n")
+        
+        print("### General Parameters ###\n")
+        print("-> Model Parameters")
+        print(f"        Model_ID = {self.model_id}")
+        print(f"        Export_Model_to_Binary_File = {self.export_model_to_binary_file}")
+        print(f"        Plot_Model = {self.plot_model_bool}")
+        print(f"        Model_Smoothing = {self.model_smoothing_bool}")
+        print(f"        Smooth_Level = {self.smooth_level}\n")
+        
+        print("-> Export Model Path")
+        print(f"        Binary_Model_Path = {self.binary_model_path}\n")
+        
+        print("-> VS Velocity Approximation")
+        print(f"        VS_Velocity = {self.vs_velocity_approximation}\n")
+        
+        print("-> Density Value Approximation")
+        print(f"        Density_Value = {self.rho_value_approximation}\n")
+
+        print("### Image to Model Area ###\n")
+        print("-> Model Bools")
+        print(f"        Image_To_Model_ID = {self.image_to_model_id}")
+        print(f"        Model_Extra_Routine = {self.model_extra_routine}\n")
+        
+        print("-> Load Image Model")
+        print(f"        Image_File_Path = {self.image_file_path}\n")
+        
+        print("-> Model Parameters")
+        print(f"        VP_Velocity = {self.vp_velocity}")
+        print(f"        VS_Velocity = {self.vs_velocity}")
+        print(f"        Rho_Value = {self.rho_value}\n")
+        
+        print("### Complex Image Model ###\n")
+        print("-> Model Bools")
+        print(f"        Complex_Model_ID = {self.complex_model_bool}")
+        print(f"        Inverse_Velocity = {self.inverse_velocity}\n")
+
+        print("-> Model Parameters")
+        print(f"        Minimum_VP_Velocity = {self.vpmin}")
+        print(f"        Maximum_VP_Velocity = {self.vpmax}")
+        print(f"        Minimum_VS_Velocity = {self.vsmin}")
+        print(f"        Maximum_VS_Velocity = {self.vsmax}")
+        print(f"        Minimum_Density = {self.rhomin}")
+        print(f"        Maximum_Density = {self.rhomax}\n")
+        
+        print("### Parallel Plane Model Area ###\n")
+        print("-> Model Bools")
+        print(f"        Parallel_Plane_Model_ID = {self.parallel_plane_model_id}\n")
+        
+        print("-> Model Parameters")
+        print(f"        Nx = {self.nx}")
+        print(f"        Nz = {self.nz}")
+        print(f"        Interfaces = {self.interfaces}")
+        print(f"        VP_Velocity = {self.vp_velocity_parallel}")
+        print(f"        VS_Velocity = {self.vs_velocity_parallel}")
+        print(f"        Rho_Value = {self.density_value_parallel}\n")
+        
+        print("============================================\n")
+
