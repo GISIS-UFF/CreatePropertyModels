@@ -23,12 +23,14 @@ class Image():
         elif p.algorithm_type == 3:
             self.properties = p.vp_velocity_parallel
             self.interface_occurence = len(p.vp_velocity_parallel)
-            self.height, self.width = p.Nz, p.Nx
+            self.height, self.width = p.nz, p.nx
             self.interfaces = p.interfaces
-            self.value_interfaces = [p.vp_velocity_parallel, \
-                                     p.vs_velocity_parallel, p.density_value_parallel]
+            self.value_interfaces = [
+                p.vp_velocity_parallel,
+                p.vs_velocity_parallel, 
+                p.density_value_parallel
+            ]
 
-        # TODO
         if p.model_id == 1:
             self.model = np.zeros((self.height, self.width))
 
@@ -37,7 +39,9 @@ class Image():
             elif p.algorithm_type == 2:
                 self.pmin, self.pmax = p.vpmin, p.vpmax
                 self.set_values_complex()
-
+            elif p.algorithm_type == 3:
+                self.parallel_acoustic()
+        # TODO: apply logic to elastic models
         elif p.model_id == 2:
             self.model_vp = np.zeros((self.height, self.width))
             self.model_vs = np.zeros((self.height, self.width))

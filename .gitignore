@@ -30,3 +30,6 @@ __pycache__/
 *.png
 *.jpeg
 *.jpg
+
+# Test folder
+tests/

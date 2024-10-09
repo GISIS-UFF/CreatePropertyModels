@@ -1,9 +1,9 @@
 ### General Parameters ###
 
-    Print_Parameters = False                                        # Print Parameters used when executing the file. (bool)
+    Print_Parameters = True                                        # Print Parameters used when executing the file. (bool)
 
     # Model Parameters
-        Algorithm = 1                                               # 1 - Image to Model; 2 - Complex Model; 3 - Parallel Model. (int)
+        Algorithm = 3                                               # 1 - Image to Model; 2 - Complex Model; 3 - Parallel Model. (int)
         Model_ID = 1                                                # 1 - Acoustic; 2 - Elastic (int)
         Export_Model_to_Binary_File = False                         # True - Converts model into a binary file. (bool)
         Plot_Model = True                                           # True - Plot Model (bool)
