@@ -1,7 +1,10 @@
+#----------------------------------------------------------------------------
+# Create Date: 16/07/2024 3:30PM
+# @author: Davi Melonio
+# ---------------------------------------------------------------------------
+
 import time
 from src import Parameters, Image, Plot
-
-__author__ = "Davi Melonio"
 
 def run():
     start = time.time()
