@@ -1,8 +1,5 @@
-from sys import path
-path.append("../")
-# TODO: make it work
-from src import Parameters, Image, Plot
 import time
+from src import Parameters, Image, Plot
 
 __author__ = "Davi Melonio"
 

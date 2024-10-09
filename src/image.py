@@ -1,5 +1,6 @@
 from src import np, mpimg, ErrorHandling
 
+# TODO: elastic case
 class Image():
     def __init__(self, p) -> None:
         self.Parameters = p
@@ -10,15 +11,20 @@ class Image():
         # algorithm_type = 1 (img2model); algorithm_type = 2 (complex); algorithm_type = 3 (parallel)
         if p.algorithm_type == 1:
             self.properties = p.vp_velocity
+            self.routine_bool = p.model_extra_routine # temporary
             self.interface_occurence = len(p.vp_velocity)
             self.height, self.width = self.img.shape[:2]
-            self.unique_brightness_values = self.img.flatten()
+            self.unique_brightness = np.unique(self.img)
             self.frequent_brightness = self.get_predominant_brightness()
             self.respective_value = dict(zip(self.frequent_brightness, self.properties))
 
         elif p.algorithm_type == 2:
             self.height, self.width = self.img.shape[:2]
             self.inverse_velocity = p.inverse_velocity
+            self.min_brightness = np.min(self.img)
+            self.max_brightness = np.max(self.img)
+            self.v_ratio = (p.vpmax - p.vpmin) / (self.max_brightness - self.min_brightness)
+            self.brightness = self.img[:, :]
 
         elif p.algorithm_type == 3:
             self.properties = p.vp_velocity_parallel
@@ -32,7 +38,7 @@ class Image():
             ]
 
         if p.model_id == 1:
-            self.model = np.zeros((self.height, self.width))
+            self.model = self.img 
 
             if p.algorithm_type == 1:
                 self.set_values()
@@ -41,11 +47,15 @@ class Image():
                 self.set_values_complex()
             elif p.algorithm_type == 3:
                 self.parallel_acoustic()
+
         # TODO: apply logic to elastic models
         elif p.model_id == 2:
             self.model_vp = np.zeros((self.height, self.width))
             self.model_vs = np.zeros((self.height, self.width))
             self.model_rho = np.zeros((self.height, self.width))
+
+        if p.export_model_to_binary_file:
+            self.export_model_to_binary(p.binary_model_path)
 
     # ======================== Load Image =======================
     def load(self) -> np.array:
@@ -71,32 +81,23 @@ class Image():
 
     # ======================== Predominant Brightness ===========
     def get_predominant_brightness(self):
-        brightness, counts = np.unique(self.unique_brightness_values, return_counts=True)
+        brightness, counts = np.unique(self.img, return_counts=True)
+
+        idx_sorted_by_count = np.argsort(-counts)[:self.interface_occurence]
         
-        sorted_counts = np.sort(counts)[:self.interface_occurence]
-        
-        idx = []
-        for i, n in enumerate(counts):
-            if n in sorted_counts:
-                idx.append(i)
-        
-        return brightness[idx]
+        return brightness[idx_sorted_by_count]
 
     # ========================= Img2Model ========================
     def set_values(self) -> np.array:
-        for i in range(self.height):
-            for j in range(self.width):
-                brightness = self.img[i, j]  
-                self.model[i, j] = self.respective_value.get(brightness, 0)
+        for brightness in self.unique_brightness:
+            if brightness not in self.frequent_brightness:
+                nearest_index = np.argmin(abs(self.frequent_brightness - brightness.astype(np.uint16)))
+                self.model = np.where(self.model == brightness, self.respective_value[self.frequent_brightness[nearest_index]], self.model)
+            else:
+                self.model = np.where(self.model == brightness, self.respective_value[brightness], self.model)
 
-                if brightness not in self.respective_value:
-                    nearest_index = np.argmin([abs(element - brightness.astype(np.uint16)) \
-                        for element in self.frequent_brightness])
-                    self.model[i, j] = self.respective_value[self.frequent_brightness[nearest_index]]
-                
-        # if self.routine_bool: 
-        #     routine = self.extra_routine() 
-        #     routine.loop()
+        if self.routine_bool: 
+            self.extra_routine() 
 
     # =========================== Parallel ==========================
     def parallel_acoustic(self):
@@ -116,17 +117,9 @@ class Image():
 
     # =========================== Complex ==========================
     def set_values_complex(self):
-        min_brightness = np.min(self.img)
-        max_brightness = np.max(self.img)
-        v_ratio = (self.pmax - self.pmin) / (max_brightness - min_brightness)
-        for i in range(self.height):
-            for j in range(self.width):
-                brightness = self.img[i][j]
-                self.model[i][j] = self.__get_velocity_order(brightness, v_ratio, min_brightness)
-
-    def __get_velocity_order(self, brightness, v_ratio, min_brightness):
-        arg = (brightness - min_brightness) * v_ratio
-        return self.pmax - arg if self.inverse_velocity else self.pmin + arg
+        arg = (self.brightness - self.min_brightness) * self.v_ratio
+        right_property = self.pmax - arg if self.inverse_velocity else self.pmin + arg
+        self.model = right_property 
 
     # ============================ Extra Routine ====================
     def extra_routine(self):
@@ -152,9 +145,10 @@ class Image():
 
     def __check_diff_brightness_condition(self, adj_arr: list):
         unique_values, counts = np.unique(adj_arr, return_counts=True)
-        arr_brightness_condition = unique_values[counts > 5]
+        arr_brightness_condition = unique_values[counts > 4]
         return arr_brightness_condition if len(arr_brightness_condition) > 0 else []
 
     # =============================== Export Model ====================
-    def export_model_to_binary(self) -> None:
-        self.model.flatten('F').astype('float32', order='F').tofile(self.path)
+    # Change to Elastic Case
+    def export_model_to_binary(self, path) -> None:
+        self.model.flatten('F').astype('float32', order='F').tofile(path + f"model_vp_2d_{self.width}x{self.height}.bin")

@@ -29,7 +29,7 @@ class Parameters:
         self.vs_velocity_approximation = self.data.get('VS_Velocity')
         self.rho_value_approximation = self.data.get('Density_Value')
         self.image_to_model_id = self.data.get('Image_To_Model_ID')
-        self.model_extra_routine = self.data.get('Model_Extra Routine')
+        self.model_extra_routine = self.data.get('Model_Extra_Routine')
         self.image_file_path = self.data.get('Image_File_Path')
         self.vp_velocity = self.data.get('VP_Velocity')
         self.vs_velocity = (
