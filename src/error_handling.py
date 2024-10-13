@@ -1,3 +1,4 @@
+
 class ErrorHandling:
     """
     Class for management of error messages

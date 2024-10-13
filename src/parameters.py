@@ -128,7 +128,6 @@ class Parameters:
         if self.algorithm_type == 1:
             print("### Image to Model Area ###\n")
             print("-> Model Bools")
-            print(f"        Image_To_Model_ID = {self.image_to_model_id}")
             print(f"        Model_Extra_Routine = {self.model_extra_routine}\n")
             
             print("-> Load Image Model")
@@ -141,7 +140,6 @@ class Parameters:
         elif self.algorithm_type == 2:
             print("### Complex Image Model ###\n")
             print("-> Model Bools")
-            print(f"        Complex_Model_ID = {self.complex_model_bool}")
             print(f"        Inverse_Velocity = {self.inverse_velocity}\n")
 
             print("-> Model Parameters")
@@ -153,8 +151,6 @@ class Parameters:
             print(f"        Maximum_Density = {self.rhomax}\n")
         elif self.algorithm_type == 3:
             print("### Parallel Plane Model Area ###\n")
-            print("-> Model Bools")
-            print(f"        Parallel_Plane_Model_ID = {self.parallel_plane_model_id}\n")
             
             print("-> Model Parameters")
             print(f"        Nx = {self.nx}")
