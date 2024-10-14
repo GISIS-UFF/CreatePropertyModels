@@ -1,19 +1,14 @@
 from src import np, plt, mpimg, ErrorHandling
+from scipy.ndimage import gaussian_filter
 
-# TODO: elastic case
-# tirar esses ifs do construtor, um método "do" dentro de super para armezenar isso
 class Image():
     def __init__(self, p) -> None:
         self.Parameters = p
         self.image_file_path = p.image_file_path
         self.format_values = {'.png': 255, '.jpg': 1, '.jpeg': 1}
-        self.img = self.load()
-            # manter apenas um model para a lógica elástica
+        if p.algorithm_type != 3:
+            self.img = self.load()
 
-        if p.export_model_to_binary_file:
-            self.export_model_to_binary()
-
-    # ======================== Load Image =======================
     def load(self) -> np.array:
             try:
                 self.img = mpimg.imread(self.image_file_path)
@@ -35,7 +30,6 @@ class Image():
         except:
             ErrorHandling.wrong_image_format()
 
-    # ============================ Extra Routine ====================
     def extra_routine(self):
         for i in range(self.height):
             for j in range(self.width):
@@ -62,11 +56,20 @@ class Image():
         arr_brightness_condition = unique_values[counts > 4]
         return arr_brightness_condition if len(arr_brightness_condition) > 0 else []
 
-    # =============================== Export Model ====================
-    # dividir a matriz vp aqui caso o usuário tenha escolhido a aproximação; exportar logo aqui os 3 modelos 
     def export_model_to_binary(self) -> None:
         path = self.Parameters.binary_model_path
+        if self.Parameters.model_id == 1:
+            self.__export_single_model(path)
+        elif self.Parameters.model_id == 2:
+            self.__export_multi_model(path)
+
+    def __export_single_model(self, path):
         self.model.flatten('F').astype('float32', order='F').tofile(path + f"model_vp_2d_{self.width}x{self.height}.bin")
+
+    def __export_multi_model(self, path):
+        file_names = ["vp", "vs", "rho"]
+        for i in range(3):
+            self.model[i].flatten('F').astype('float32', order='F').tofile(path + f"model_{file_names[i]}_2d_{self.width}x{self.height}.bin")
 
     def plot_acoustic(self):
         fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(10,8))
@@ -96,30 +99,30 @@ class Image():
     def plot_elastic(self):
         fig, ax = plt.subplots(nrows=3, ncols=1, figsize=(10,8))
 
-        xloc = np.linspace(0, self.Nx - 1, 7, dtype=int)
+        xloc = np.linspace(0, self.width - 1, 7, dtype=int)
         xlab = np.array(xloc, dtype=int)
 
-        zloc = np.linspace(0, self.Nz - 1, 7, dtype=int)
+        zloc = np.linspace(0, self.height - 1, 7, dtype=int)
         zlab = np.array(zloc, dtype=int)
 
-        im = ax[0].imshow(self.model_vp, cmap="jet", aspect="auto")
+        im = ax[0].imshow(self.model[0], cmap="jet", aspect="auto")
         ax[0].set_title("VP Model", fontsize=13)
         ax[0].set_ylabel("Depth [m]", fontsize=12)
         cax = fig.colorbar(im, ax=ax[0], label='VP [m/s]')
-        cax.set_ticks(np.linspace(self.model_vp.min(), self.model_vp.max(), num=5))
+        cax.set_ticks(np.linspace(self.model[0].min(), self.model[0].max(), num=5))
 
-        im2 = ax[1].imshow(self.model_vs, cmap="jet", aspect="auto")
+        im2 = ax[1].imshow(self.model[1], cmap="jet", aspect="auto")
         ax[1].set_title("VS Model", fontsize=13)
         ax[1].set_ylabel("Depth [m]", fontsize=12)
         cax2 = fig.colorbar(im2, ax=ax[1], label='VS [m/s]')
-        cax2.set_ticks(np.linspace(self.model_vs.min(), self.model_vs.max(), num=5))
+        cax2.set_ticks(np.linspace(self.model[1].min(), self.model[1].max(), num=5))
 
-        im3 = ax[2].imshow(self.model_rho, cmap="jet", aspect="auto")
+        im3 = ax[2].imshow(self.model[2], cmap="jet", aspect="auto")
         ax[2].set_title("Density Model", fontsize=13)
         ax[2].set_xlabel("Distance [m]", fontsize=12)
         ax[2].set_ylabel("Depth [m]", fontsize=12)
         cax3 = fig.colorbar(im3, ax=ax[2], label='Density [kg/m$^3$]')
-        cax3.set_ticks(np.linspace(self.model_rho.min(), self.model_rho.max(), num=5))
+        cax3.set_ticks(np.linspace(self.model[2].min(), self.model[2].max(), num=5))
 
         for i in range(len(ax)):
             ax[i].set_xticks(xloc)
@@ -135,7 +138,7 @@ class Img2Model(Image):
     def __init__(self, p):
         super().__init__(p)
         self.properties = p.vp_velocity
-        self.routine_bool = p.model_extra_routine # temporary
+        self.model_extra_routine = p.model_extra_routine
         self.interface_occurence = len(p.vp_velocity)
         self.height, self.width = self.img.shape[:2]
         self.model = self.img
@@ -143,25 +146,38 @@ class Img2Model(Image):
         self.frequent_brightness = self.get_predominant_brightness()
         self.respective_value = dict(zip(self.frequent_brightness, self.properties))
 
-        self.set_values()
-
     def set_values(self) -> np.array:
-            for brightness in self.unique_brightness:
-                if brightness not in self.frequent_brightness:
-                    nearest_index = np.argmin(abs(self.frequent_brightness - brightness.astype(np.uint16)))
-                    self.model = np.where(self.model == brightness, \
-                                          self.respective_value[self.frequent_brightness[nearest_index]], self.model)
-                else:
-                    self.model = np.where(self.model == brightness, self.respective_value[brightness], self.model)
+        for brightness in self.unique_brightness:
+            nearest_value = self.__get_nearest_value(brightness)
+            self.model = np.where(self.model == brightness, nearest_value, self.model)
 
-            if self.routine_bool: 
-                self.extra_routine()
+        if self.model_extra_routine:
+            self.extra_routine()
+
+    def set_elastic_values(self, p) -> None:
+        self.model_elastic = [[] for _ in range(3)] 
+        self.properties = [
+            p.vp_velocity,
+            p.vs_velocity, 
+            p.rho_value
+        ]
+        for i in range(3):
+            self.respective_value = dict(zip(self.frequent_brightness, self.properties[i]))
+            self.set_values()
+            self.model_elastic[i] = self.model
+            self.model = self.img  
+
+        self.model = self.model_elastic
+
+    def __get_nearest_value(self, brightness):
+        if brightness not in self.frequent_brightness:
+            nearest_index = np.argmin(abs(self.frequent_brightness - brightness.astype(np.uint16)))
+            return self.respective_value[self.frequent_brightness[nearest_index]]
+        return self.respective_value[brightness]
 
     def get_predominant_brightness(self):
         brightness, counts = np.unique(self.img, return_counts=True)
-
         idx_sorted_by_count = np.argsort(-counts)[:self.interface_occurence]
-        
         return brightness[idx_sorted_by_count]
 
 class Complex(Image):
@@ -174,14 +190,25 @@ class Complex(Image):
         self.max_brightness = np.max(self.img)
         self.v_ratio = (p.vpmax - p.vpmin) / (self.max_brightness - self.min_brightness)
         self.brightness = self.img[:, :]
-        self.pmin, self.pmax = p.vpmin, p.vpmax # temporarary
-
-        self.set_values()
+        self.pmin, self.pmax = p.vpmin, p.vpmax 
 
     def set_values(self):
         arg = (self.brightness - self.min_brightness) * self.v_ratio
         right_property = self.pmax - arg if self.inverse_velocity else self.pmin + arg
-        self.model = right_property 
+        self.model = right_property
+
+    def set_elastic_values(self, p) -> None:
+        self.model_elastic = [[] for _ in range(3)]
+        self.pmin = [p.vpmin, p.vsmin, p.rhomin]
+        self.pmax = [p.vpmax, p.vsmax, p.rhomax]
+
+        for i in range(3):
+            self.pmin, self.pmax = self.pmin[i], self.pmax[i]
+            self.set_values()  
+            self.model_elastic[i] = self.model
+            self.model = self.img  
+
+        self.model = self.model_elastic
 
 class Parallel(Image):
     def __init__(self, p):
@@ -191,11 +218,6 @@ class Parallel(Image):
         self.height, self.width = p.nz, p.nx
         self.model = np.zeros((self.height, self.width))
         self.interfaces = p.interfaces
-        # self.value_interfaces = [
-        #     p.vp_velocity_parallel,
-        #     p.vs_velocity_parallel, 
-        #     p.density_value_parallel
-        # ]
         self.value_interfaces = p.vp_velocity_parallel
 
         self.set_values()
@@ -205,33 +227,83 @@ class Parallel(Image):
         for layer, velocity in enumerate(self.value_interfaces[1:]):
             self.model[self.interfaces[layer]:, :] = velocity
 
+    def set_elastic_values(self, p) -> None:
+        self.model_elastic = [[] for _ in range(3)]
+        self.temp_value_interfaces = [
+            p.vp_velocity_parallel,
+            p.vs_velocity_parallel, 
+            p.density_value_parallel
+        ]
+        for i in range(3):
+            self.value_interfaces = self.temp_value_interfaces[i]
+            self.set_values()
+            self.model_elastic[i] = self.model
+            self.model = np.zeros((self.height, self.width))
+
+        self.model = self.model_elastic
+
 class ModelFactory:
     def __init__(self, p):
-        self.Parameters = p
+        self.p = p
+        self.model_id = p.model_id
+        self.algorithm_type = p.algorithm_type
+        self.plot_model_bool = p.plot_model_bool
+        self.model_smoothing_bool = p.model_smoothing_bool
+        self.smooth_level = p.smooth_level
+        self.model = None  
 
     def create_model(self):
-        p = self.Parameters
+        self.model = self.__create_model() 
+       
+        if self.model_smoothing_bool:
+            self.__apply_gaussian_smooth()
 
-        if p.model_id == 1:
-            if p.algorithm_type == 1:
-                return Img2Model(p)
-            elif p.algorithm_type == 2:
-                return Complex(p)
-            elif p.algorithm_type == 3:
-                return Parallel(p)
-            else:
-                raise KeyError("Please Select a Valid Algorithm for Acoustic Model. [1/2/3]")
+        if self.p.export_model_to_binary_file:
+            self.model.export_model_to_binary()
 
-        elif p.model_id == 2:
-            if p.algorithm_type == 1:
-                pass
-            elif p.algorithm_type == 2:
-                pass
-            elif p.algorithm_type == 3:
-                pass
-            else:
-                raise KeyError("Please Select a Valid Algorithm for Elastic Model. [1/2/3]")
+        return self.model
 
+    def __create_model(self):
+        model_class = self.__get_model_class()
+        model_instance = model_class(self.p)
+
+        if self.model_id == 1:
+            model_instance.set_values()
+        elif self.model_id == 2:
+            model_instance.set_elastic_values(self.p)
         else:
-            raise KeyError("Please Select a Valid Model. [1/2]")
+            raise KeyError("Invalid model_id. Valid options are 1 (acoustic) or 2 (elastic).")
+
+        return model_instance
+
+    def __get_model_class(self):
+        model_classes = {
+            1: Img2Model,
+            2: Complex,
+            3: Parallel
+        }
+
+        if self.algorithm_type not in model_classes:
+            raise KeyError("Invalid algorithm_type. Choose from [1, 2, 3].")
+        
+        return model_classes[self.algorithm_type]
+
+    def __apply_gaussian_smooth(self):
+        if self.model_id == 1:
+            self.model.model = gaussian_filter(self.model.model, sigma=self.smooth_level)
+        elif self.model_id == 2:
+            for i in range(3):
+                self.model.model[i] = gaussian_filter(self.model.model[i], sigma=self.smooth_level)
+
+    def plot_model(self):
+        if self.plot_model_bool:
+            if self.model is None:
+                raise ValueError("Model has not been created. Call create_model() before plotting.")
+            
+            if self.model_id == 1:
+                self.model.plot_acoustic()  
+            elif self.model_id == 2:
+                self.model.plot_elastic()   
+            else:
+                raise ValueError("Invalid model_id. Valid options are 1 (acoustic) or 2 (elastic).")
 

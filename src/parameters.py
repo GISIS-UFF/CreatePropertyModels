@@ -1,5 +1,7 @@
 import re
 
+SQRT_3 = 1.73205080757
+
 class Parameters:
     """
     Get parameters from data_array.txt
@@ -33,7 +35,7 @@ class Parameters:
         self.image_file_path = self.data.get('Image_File_Path')
         self.vp_velocity = self.data.get('VP_Velocity')
         self.vs_velocity = (
-            [round(i / 1.7, 2) for i in self.data.get('VS_Velocity')] 
+            [round(i / SQRT_3, 2) for i in self.data.get('VS_Velocity')] 
             if self.data.get('VS_Velocity') else self.data.get('Density_Value')
         )
         self.rho_value = (
@@ -46,11 +48,10 @@ class Parameters:
         self.vpmax = self.data.get('Maximum_VP_Velocity')
         self.vsmin = (
             self.data.get('Minimum_VS_Velocity') 
-            if not self.data.get('VS_Velocity') else round(self.data.get('Minimum_VP_Velocity') / 1.7, 2)
-        )
+            if not self.data.get('VS_Velocity') else round(self.data.get('Minimum_VP_Velocity') / SQRT_3, 2)) 
         self.vsmax = (
             self.data.get('Maximum_VS_Velocity') 
-            if not self.data.get('VS_Velocity') else round(self.data.get('Maximum_VP_Velocity') / 1.7, 2)
+            if not self.data.get('VS_Velocity') else round(self.data.get('Maximum_VP_Velocity') / SQRT_3, 2)
         )
         self.rhomin = (
             self.data.get('Minimum_Density') 
@@ -66,7 +67,7 @@ class Parameters:
         self.interfaces = self.data.get('Interfaces')
         self.vp_velocity_parallel = self.data.get('VP_Velocity_Parallel')
         self.vs_velocity_parallel = (
-            [round(i / 1.7, 2) for i in self.data.get('VS_Velocity')] 
+            [round(i / SQRT_3, 2) for i in self.data.get('VS_Velocity_Parallel')] 
             if self.data.get('VS_Velocity') else self.data.get('Density_Value')
 
         )
@@ -110,6 +111,7 @@ class Parameters:
         
         print("### General Parameters ###\n")
         print("-> Model Parameters")
+        print(f"        Algorithm_Type = {self.algorithm_type}")
         print(f"        Model_ID = {self.model_id}")
         print(f"        Export_Model_to_Binary_File = {self.export_model_to_binary_file}")
         print(f"        Plot_Model = {self.plot_model_bool}")

@@ -1,3 +1,4 @@
+import time
 
 class ErrorHandling:
     """
@@ -26,3 +27,11 @@ class ErrorHandling:
         if Nx < 0 or Nz < 0:
             raise ValueError("Model parameters cannot be negative!")
 
+def measure_runtime(func):
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        result = func(*args, **kwargs)
+        end = time.time()
+        print(f"Runtime: {end - start} seconds")
+        return result
+    return wrapper

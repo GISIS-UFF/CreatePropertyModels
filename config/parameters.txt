@@ -3,10 +3,10 @@
     Print_Parameters = True                                        # Print Parameters used when executing the file. (bool)
 
     # Model Parameters
-        Algorithm = 3                                              # 1 - Image to Model; 2 - Complex Model; 3 - Parallel Model. (int)
+        Algorithm = 1                                            # 1 - Image to Model; 2 - Complex Model; 3 - Parallel Model. (int)
         Model_ID = 1                                                # 1 - Acoustic; 2 - Elastic (int)
         Export_Model_to_Binary_File = False                         # True - Converts model into a binary file. (bool)
-        Plot_Model = True                                           # True - Plot Model (bool)
+        Plot_Model = True                                          # True - Plot Model (bool)
         Model_Smoothing = False                                     # True - Uses a 2D Gaussian Kernel to smooth the model. (bool)
         Smooth_Level = 6                                            # Defines the level of smoothness of the Gaussian Kernel. (int)
 
@@ -14,7 +14,7 @@
         Binary_Model_Path = data/output/                         # Path for the output of binary model (str) 
 
     # VS Velocity Approximation
-        VS_Velocity = True                                          # Approximate VS as VP / 1.7. This option disregards the VS array below. (bool)
+        VS_Velocity = True                                          # Approximate VS as VP / sqrt(3). This option disregards the VS array below. (bool)
 
     # Density Value Approximation
         Density_Value = True                                        # Uses Gardner Approximation for Density: 0.23 * Vp ** 0.25. This option disregards the Density array below. (bool) 
@@ -25,7 +25,7 @@
         Model_Extra_Routine = False                                 # True - Does extra work to convert wrong pixels, recomended for images not made in MS Paint. (bool)
 
     # Load Image Model
-        Image_File_Path = data/input/marmousi_model.jpg           # Path of the image File. (str)
+        Image_File_Path = data/input/pixeled_test.png           # Path of the image File. (str)
 
     # Model Parameters
         VP_Velocity     = [2000, 3000]                        # Set VP - m/s - velocity for each layer. (list)
