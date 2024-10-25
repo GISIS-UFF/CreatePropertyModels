@@ -272,7 +272,7 @@ class ModelFactory:
         elif self.model_id == 2:
             model_instance.set_elastic_values(self.p)
         else:
-            raise KeyError("Invalid model_id. Valid options are 1 (acoustic) or 2 (elastic).")
+            raise KeyError("Invalid Model_ID. Choose a valid key [1, 2].")
 
         return model_instance
 
@@ -284,7 +284,7 @@ class ModelFactory:
         }
 
         if self.algorithm_type not in model_classes:
-            raise KeyError("Invalid algorithm_type. Choose from [1, 2, 3].")
+            raise KeyError("Invalid Algoriyhm_Type. Choose a valid key [1, 2, 3].")
         
         return model_classes[self.algorithm_type]
 
@@ -297,13 +297,11 @@ class ModelFactory:
 
     def plot_model(self):
         if self.plot_model_bool:
-            if self.model is None:
-                raise ValueError("Model has not been created. Call create_model() before plotting.")
             
             if self.model_id == 1:
                 self.model.plot_acoustic()  
             elif self.model_id == 2:
                 self.model.plot_elastic()   
             else:
-                raise ValueError("Invalid model_id. Valid options are 1 (acoustic) or 2 (elastic).")
+                raise ValueError("Invalid Model_ID. Choose a valid key [1, 2]")
 

@@ -32,6 +32,6 @@ def measure_runtime(func):
         start = time.time()
         result = func(*args, **kwargs)
         end = time.time()
-        print(f"Runtime: {end - start} seconds")
+        print(f"Runtime: {round(end - start, 4)} seconds")
         return result
     return wrapper
