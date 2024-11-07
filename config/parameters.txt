@@ -1,17 +1,20 @@
 ### General Parameters ###
 
+    Print_Parameters = True                                        # Print Parameters used when executing the file. (bool)
+
     # Model Parameters
+        Algorithm = 1                                           # 1 - Image to Model; 2 - Complex Model; 3 - Parallel Model. (int)
         Model_ID = 2                                                # 1 - Acoustic; 2 - Elastic (int)
         Export_Model_to_Binary_File = False                         # True - Converts model into a binary file. (bool)
-        Plot_Model = True                                           # True - Plot Model (bool)
+        Plot_Model = True                                          # True - Plot Model (bool)
         Model_Smoothing = False                                     # True - Uses a 2D Gaussian Kernel to smooth the model. (bool)
         Smooth_Level = 6                                            # Defines the level of smoothness of the Gaussian Kernel. (int)
 
     # Export Model Path
-        Binary_Model_Path = binary_models/                          # Path for the output of binary model (str) 
+        Binary_Model_Path = data/output/                         # Path for the output of binary model (str) 
 
     # VS Velocity Approximation
-        VS_Velocity = True                                          # Approximate VS as VP / 1.7. This option disregards the VS array below. (bool)
+        VS_Velocity = True                                          # Approximate VS as VP / sqrt(3). This option disregards the VS array below. (bool)
 
     # Density Value Approximation
         Density_Value = True                                        # Uses Gardner Approximation for Density: 0.23 * Vp ** 0.25. This option disregards the Density array below. (bool) 
@@ -19,22 +22,19 @@
 ### Image to Model Area ###
 
     # Model Bools
-        Image_To_Model_ID = False                                   # True - Coverts image brightness into properties values (bool) 
-        Model_Extra Routine = False                                 # True - Does extra work to convert wrong pixels, recomended for images not made in MS Paint. (bool)
+        Model_Extra_Routine = False                                 # True - Does extra work to convert wrong pixels, recomended for images not made in MS Paint. (bool)
 
     # Load Image Model
-        Image_File_Path = model_images/marmousi_model.jpg           # Path of the image File. (str)
+        Image_File_Path = data/input/fault_model_2.png           # Path of the image File. (str)
 
     # Model Parameters
-        VP_Velocity     = [2000, 3000, 3500]                        # Set VP - m/s - velocity for each layer. (list)
+        VP_Velocity     = [2000, 3000, 4500]                        # Set VP - m/s - velocity for each layer. (list)
         VS_Velocity     = [1176, 1764, 2058]                        # Set VS - m/s - velocity for each layer. (list)
         Density_Value   = [2300, 2600, 2500]                        # Set Density - Kg/m^3 - in values for each layer. (list)
 
 ### Complex Image Model ###
 
     # Model Bools
-
-        Complex_Model_ID = True                                     # Defines max/min velocity for models with large ammount of layers (bool)
         Inverse_Velocity = False                                    # True - inverse velocities in case the brightness value in the image are also inversed (bool)
 
     # Model Parameters
@@ -47,17 +47,13 @@
 
         Minimum_Density = 2000                                      # Minimum Density that will appeir in your model (float)
         Maximum_Density = 3500                                      # Maximum Density that will appeir in your model (float) 
-
 ### Parallel Plane Model Area ###
-
-    # Model Bools
-        Parallel_Plane_Model_ID = False                             # Creates a Parallel Plane Model instead of an image -> model. This option disregards the options above. (bool)
 
     # Model Parameters
         Nx = 4001                                                   # Sample number in X direction (int) 
         Nz = 501                                                    # Sample number in Z direction (int)
 
         Interfaces      = [250]                                     # Set where - in meters - layer interfaces will be located. (list)
-        VP_Velocity     = [2000, 4500]                              # Set VP velocity for each layer. (list)
-        VS_Velocity     = [1176, 2647]                              # Set VS velocity for each layer. (list)
-        Density_Value   = [2300, 2100]                              # Set Density values for each layer.  (list)
+        VP_Velocity_Parallel     = [2000, 4500]                              # Set VP velocity for each layer. (list)
+        VS_Velocity_Parallel     = [1176, 2647]                              # Set VS velocity for each layer. (list)
+        Density_Value_Parallel   = [2300, 2100]                              # Set Density values for each layer.  (list)
