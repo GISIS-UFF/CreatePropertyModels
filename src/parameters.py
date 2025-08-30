@@ -32,8 +32,8 @@ class Parameters:
         self.model_smoothing_bool = self.data.get('Model_Smoothing')
         self.smooth_level = self.data.get('Smooth_Level')
         self.binary_model_path = self.data.get('Binary_Model_Path')
-        self.vs_velocity_approximation = self.data.get('VS_Velocity')
-        self.rho_value_approximation = self.data.get('Density_Value')
+        self.vs_velocity_approximation = self.data.get('VS_Velocity_Bool')
+        self.rho_value_approximation = self.data.get('Density_Value_Bool')
         self.image_to_model_id = self.data.get('Image_To_Model_ID')
         self.model_extra_routine = self.data.get('Model_Extra_Routine')
         self.image_file_path = self.data.get('Image_File_Path')
@@ -58,13 +58,13 @@ class Parameters:
 
     def calculate_vs_velocity(self):
         vs_velocity = self.data.get('VS_Velocity')
-        if vs_velocity:
+        if self.data.get('VS_Velocity_Bool'):
             return [round(i / SQRT_3, 2) for i in vs_velocity]
-        return self.data.get('Density_Value')
+        return self.data.get('VS_Velocity')
 
     def calculate_rho_value(self):
         vp_velocity = self.data.get('VP_Velocity')
-        if self.data.get('Density_Value'):
+        if self.data.get('Density_Value_Bool'):
             return [round((0.31 * i ** 0.25) * 1e3, 2) for i in vp_velocity]
         return self.data.get('Density_Value')
 
@@ -90,15 +90,15 @@ class Parameters:
 
     def calculate_vs_velocity_parallel(self):
         vs_velocity_parallel = self.data.get('VS_Velocity_Parallel')
-        if vs_velocity_parallel:
+        if self.data.get('VS_Velocity_Bool'):
             return [round(i / SQRT_3, 2) for i in vs_velocity_parallel]
-        return self.data.get('Density_Value')
+        return self.data.get('VS_Velocity_Parallel')
 
     def calculate_density_value_parallel(self):
-        vp_velocity_parallel = self.data.get('VP_Velocity')
-        if self.data.get('Density_Value'):
+        vp_velocity_parallel = self.data.get('VP_Velocity_Parallel')
+        if self.data.get('Density_Value_Bool'):
             return [round((0.31 * i ** 0.25) * 1e3, 2) for i in vp_velocity_parallel]
-        return self.data.get('Density_Value')
+        return self.data.get('Density_Value_Parallel')
 
     def get(self):
         try:

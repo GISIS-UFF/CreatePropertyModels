@@ -3,9 +3,9 @@
     Print_Parameters = True                                        # Print Parameters used when executing the file. (bool)
 
     # Model Parameters
-        Algorithm = 1                                           # 1 - Image to Model; 2 - Complex Model; 3 - Parallel Model. (int)
+        Algorithm = 3                                          # 1 - Image to Model; 2 - Complex Model; 3 - Parallel Model. (int)
         Model_ID = 2                                                # 1 - Acoustic; 2 - Elastic (int)
-        Export_Model_to_Binary_File = False                         # True - Converts model into a binary file. (bool)
+        Export_Model_to_Binary_File = True                         # True - Converts model into a binary file. (bool)
         Plot_Model = True                                          # True - Plot Model (bool)
         Model_Smoothing = False                                     # True - Uses a 2D Gaussian Kernel to smooth the model. (bool)
         Smooth_Level = 6                                            # Defines the level of smoothness of the Gaussian Kernel. (int)
@@ -14,10 +14,10 @@
         Binary_Model_Path = data/output/                         # Path for the output of binary model (str) 
 
     # VS Velocity Approximation
-        VS_Velocity = True                                          # Approximate VS as VP / sqrt(3). This option disregards the VS array below. (bool)
+        VS_Velocity_Bool = False                                          # Approximate VS as VP / sqrt(3). This option disregards the VS array below. (bool)
 
     # Density Value Approximation
-        Density_Value = True                                        # Uses Gardner Approximation for Density: 0.23 * Vp ** 0.25. This option disregards the Density array below. (bool) 
+        Density_Value_Bool = False                                        # Uses Gardner Approximation for Density: 0.23 * Vp ** 0.25. This option disregards the Density array below. (bool) 
 
 ### Image to Model Area ###
 
@@ -50,10 +50,10 @@
 ### Parallel Plane Model Area ###
 
     # Model Parameters
-        Nx = 4001                                                   # Sample number in X direction (int) 
+        Nx = 501                                                   # Sample number in X direction (int) 
         Nz = 501                                                    # Sample number in Z direction (int)
 
-        Interfaces      = [250]                                     # Set where - in meters - layer interfaces will be located. (list)
-        VP_Velocity_Parallel     = [2000, 4500]                              # Set VP velocity for each layer. (list)
-        VS_Velocity_Parallel     = [1176, 2647]                              # Set VS velocity for each layer. (list)
-        Density_Value_Parallel   = [2300, 2100]                              # Set Density values for each layer.  (list)
+        Interfaces      = []                                     # Set where - in meters - layer interfaces will be located. (list)
+        VP_Velocity_Parallel     = [1500]                              # Set VP velocity for each layer. (list)
+        VS_Velocity_Parallel     = [0]                              # Set VS velocity for each layer. (list)
+        Density_Value_Parallel   = [1000]                              # Set Density values for each layer.  (list)

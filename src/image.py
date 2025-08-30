@@ -223,9 +223,14 @@ class Parallel(Image):
         self.set_values()
 
     def set_values(self) -> None:
-        self.model[:self.interfaces[0], :] = self.value_interfaces[0]
-        for layer, velocity in enumerate(self.value_interfaces[1:]):
-            self.model[self.interfaces[layer]:, :] = velocity
+        if not len(self.interfaces): 
+            self.model[:, :] = self.value_interfaces[0] 
+
+        else: 
+            self.model[:self.interfaces[0], :] = self.value_interfaces[0]
+
+            for layer, velocity in enumerate(self.value_interfaces[1:]):
+                self.model[self.interfaces[layer]:, :] = velocity
 
     def set_elastic_values(self, p) -> None:
         self.model_elastic = [[] for _ in range(3)]
